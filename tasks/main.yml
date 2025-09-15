@@ -20,7 +20,7 @@
   ansible.builtin.copy:
     content: |
       [Service]
-      LimitNOFILE=10000
+      LimitNOFILE=32559
     dest: /etc/systemd/system/mariadb.service.d/limits.conf
     mode: "0644"
   register: reload_systemd_daemon
@@ -32,7 +32,7 @@
 
 - name: Configure mariadb
   notify: Restart MariaDB
-  ansible.builtin.ini_file:
+  community.general.ini_file:
     dest: "{{ mariadb_configuration_file }}"
     section: mysqld
     option: "{{ item.key }}"
@@ -56,6 +56,12 @@
     name: mariadb
     state: started
     enabled: true
+
+- name: Wait for MariaDB start
+  ansible.builtin.wait_for:
+    path: "{{ '/run/mysqld/mysqld.sock' if ansible_os_family == 'Debian' else '/var/lib/mysql/mysql.sock' }}"
+    delay: 1
+    timeout: 30
 
 - name: Create Opencast database user
   community.mysql.mysql_user:
