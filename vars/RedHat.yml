@@ -2,9 +2,9 @@
 
 mariadb_packages:
   - mariadb-server
-  - mariadb-client
-  - python3-pymysql
+  - mariadb
+  - python3-PyMySQL
 
-mariadb_configuration_file: /etc/mysql/mariadb.conf.d/99-opencast.cnf
+mariadb_configuration_file: /etc/my.cnf.d/opencast.cnf
 
-mariadb_socket_path: /run/mysqld/mysqld.sock
+mariadb_socket_path: /var/lib/mysql/mysql.sock
